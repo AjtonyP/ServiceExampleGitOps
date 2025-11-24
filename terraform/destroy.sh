@@ -35,11 +35,24 @@ if [ -f ~/.kube/microk8s-config ]; then
     echo "Kubeconfig removed"
 fi
 
-# Clean up Terraform state
+# Clean up Terraform state and files
+echo "Cleaning up Terraform files..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 if [ -f terraform.tfstate ]; then
-    echo "Removing Terraform state..."
     rm -f terraform.tfstate terraform.tfstate.backup
-    echo "Terraform state removed"
+    echo "  ✓ Removed Terraform state files"
+fi
+
+if [ -f .terraform.lock.hcl ]; then
+    rm -f .terraform.lock.hcl
+    echo "  ✓ Removed Terraform lock file"
+fi
+
+if [ -d .terraform ]; then
+    rm -rf .terraform
+    echo "  ✓ Removed .terraform directory"
 fi
 
 echo ""
