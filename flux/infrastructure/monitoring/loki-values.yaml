@@ -41,6 +41,14 @@ write:
 backend:
   replicas: 0
 
+# Disable caches for single-node setup
+chunksCache:
+  enabled: false
+  replicas: 0
+resultsCache:
+  enabled: false
+  replicas: 0
+
 # Gateway
 gateway:
   enabled: true
@@ -60,7 +68,14 @@ monitoring:
     grafanaAgent:
       installOperator: false
   lokiCanary:
-    enabled: false
+    enabled: true  # Keep enabled with minimal resources
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 50m
+        memory: 64Mi
 
 # Test disabled
 test:
