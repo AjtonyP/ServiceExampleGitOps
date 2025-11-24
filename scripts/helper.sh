@@ -41,6 +41,13 @@ function check_prerequisites() {
         print_error "Flux CLI not installed."
         exit 1
     fi
+    
+    # Ensure kubectl uses microk8s config
+    if [ ! -f "$KUBECONFIG" ]; then
+        print_info "Setting up microk8s kubeconfig..."
+        mkdir -p "$(dirname "$KUBECONFIG")"
+        microk8s config > "$KUBECONFIG"
+    fi
 }
 
 function show_status() {
@@ -50,12 +57,15 @@ function show_status() {
     microk8s status
     
     echo ""
+    echo "Using kubeconfig: $KUBECONFIG"
+    
+    echo ""
     print_header "Flux Status"
     flux get all -A
     
     echo ""
     print_header "Pod Status"
-    kubectl get pods -A
+    microk8s kubectl get pods -A
 }
 
 function show_services() {
@@ -66,18 +76,18 @@ function show_services() {
     echo ""
     
     echo "Grafana:"
-    echo "  Run: kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80"
+    echo "  Run: microk8s kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80"
     echo "  URL: http://localhost:3000"
     echo "  User: admin / prom-operator"
     echo ""
     
     echo "Prometheus:"
-    echo "  Run: kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090"
+    echo "  Run: microk8s kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090"
     echo "  URL: http://localhost:9090"
     echo ""
     
     echo "Longhorn UI:"
-    echo "  Run: kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80"
+    echo "  Run: microk8s kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80"
     echo "  URL: http://localhost:8080"
     echo ""
 }
@@ -124,28 +134,28 @@ function show_logs() {
     
     case "$component" in
         flux)
-            kubectl logs -n flux-system -l app=source-controller -f
+            microk8s kubectl logs -n flux-system -l app=source-controller -f
             ;;
         serviceexample)
-            kubectl logs -f deployment/serviceexample
+            microk8s kubectl logs -f deployment/serviceexample
             ;;
         mongodb)
-            kubectl logs -f statefulset/mongodb-0
+            microk8s kubectl logs -f statefulset/mongodb-0
             ;;
         redis)
-            kubectl logs -f deployment/redis
+            microk8s kubectl logs -f deployment/redis
             ;;
         nats)
-            kubectl logs -f deployment/nats
+            microk8s kubectl logs -f deployment/nats
             ;;
         prometheus)
-            kubectl logs -n monitoring -f statefulset/prometheus-kube-prometheus-stack-prometheus
+            microk8s kubectl logs -n monitoring -f statefulset/prometheus-kube-prometheus-stack-prometheus
             ;;
         grafana)
-            kubectl logs -n monitoring -f deployment/kube-prometheus-stack-grafana
+            microk8s kubectl logs -n monitoring -f deployment/kube-prometheus-stack-grafana
             ;;
         loki)
-            kubectl logs -n monitoring -f statefulset/loki
+            microk8s kubectl logs -n monitoring -f statefulset/loki
             ;;
         *)
             print_error "Unknown component: $component"
@@ -156,8 +166,8 @@ function show_logs() {
 
 function restart_app() {
     print_header "Restarting ServiceExample"
-    kubectl rollout restart deployment/serviceexample
-    kubectl rollout status deployment/serviceexample
+    microk8s kubectl rollout restart deployment/serviceexample
+    microk8s kubectl rollout status deployment/serviceexample
     print_success "ServiceExample restarted"
 }
 
@@ -169,15 +179,15 @@ function port_forward() {
         grafana)
             print_info "Forwarding Grafana to http://localhost:3000"
             print_info "Username: admin, Password: prom-operator"
-            kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
+            microk8s kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
             ;;
         prometheus)
             print_info "Forwarding Prometheus to http://localhost:9090"
-            kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
+            microk8s kubectl port-forward -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
             ;;
         longhorn)
             print_info "Forwarding Longhorn UI to http://localhost:8080"
-            kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
+            microk8s kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
             ;;
         *)
             echo "Usage: $0 port-forward <service>"
@@ -203,7 +213,6 @@ Commands:
   sync             - Force Flux to reconcile all resources
   logs <component> - Show logs for a component
   restart          - Restart ServiceExample deployment
-  test             - Test ServiceExample endpoints
   port-forward <service> - Port forward to a service
   help             - Show this help message
 
@@ -212,7 +221,6 @@ Examples:
   $0 logs serviceexample
   $0 sync
   $0 port-forward grafana
-  $0 test
 
 EOF
 }
