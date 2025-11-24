@@ -45,38 +45,39 @@ spec:
       defaultClassReplicaCount: 1
       reclaimPolicy: Delete
     
-    # Minimal resources for local dev
+    # Minimal resources for 4GB RAM VM
     longhornManager:
       resources:
         requests:
-          cpu: 50m
-          memory: 128Mi
+          cpu: 25m
+          memory: 64Mi
         limits:
-          cpu: 200m
-          memory: 256Mi
+          cpu: 100m
+          memory: 128Mi
     
     longhornDriver:
       resources:
         requests:
-          cpu: 50m
-          memory: 64Mi
+          cpu: 25m
+          memory: 32Mi
         limits:
-          cpu: 200m
-          memory: 128Mi
+          cpu: 100m
+          memory: 64Mi
       kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
     
     longhornUI:
+      replicas: 0
       resources:
         requests:
+          cpu: 25m
+          memory: 32Mi
+        limits:
           cpu: 50m
           memory: 64Mi
-        limits:
-          cpu: 200m
-          memory: 128Mi
     
     # Disable CSI snapshotter for minimal setup
     csi:
       attacherReplicaCount: 1
       provisionerReplicaCount: 1
       resizerReplicaCount: 1
-      snapshotterReplicaCount: 1
+      snapshotterReplicaCount: 0
