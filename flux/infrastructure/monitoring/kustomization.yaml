@@ -9,9 +9,15 @@ configMapGenerator:
   - name: prometheus-stack-values
     files:
       - values.yaml=prometheus-stack-values.yaml
+    options:
+      disableNameSuffixHash: true
   - name: loki-values
     files:
       - values.yaml=loki-values.yaml
+    options:
+      disableNameSuffixHash: true
   - name: promtail-values
     files:
       - values.yaml=promtail-values.yaml
+    options:
+      disableNameSuffixHash: true
