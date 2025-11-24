@@ -6,6 +6,8 @@ defaultSettings:
   defaultDataPath: /var/snap/microk8s/common/var/lib/longhorn
   priorityClass: longhorn-critical
 
+kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
+
 persistence:
   defaultClass: true
   defaultClassReplicaCount: 1
@@ -29,7 +31,6 @@ longhornDriver:
     limits:
       cpu: 100m
       memory: 64Mi
-  kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
 
 longhornUI:
   replicas: 0
