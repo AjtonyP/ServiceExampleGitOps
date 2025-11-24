@@ -1,0 +1,30 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+.terraformrc
+terraform.rc
+
+# Kubeconfig
+*.kubeconfig
+*-config
+
+# Flux bootstrap (if using flux bootstrap)
+clusters/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
