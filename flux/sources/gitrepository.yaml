@@ -6,8 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: ssh://git@github.com/AjtonyP/ServiceExampleGitOps.git
+  url: https://github.com/AjtonyP/ServiceExampleGitOps.git
   ref:
     branch: main
-  secretRef:
-    name: flux-system
