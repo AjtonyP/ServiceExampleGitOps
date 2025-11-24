@@ -1,19 +1,22 @@
 #!/bin/bash
 # Quick script to set KUBECONFIG for MicroK8s cluster
 
-export KUBECONFIG=~/.kube/microk8s-config
+# Ensure snap binaries are in PATH
+export PATH=$PATH:/snap/bin
 
-if [ ! -f "$KUBECONFIG" ]; then
-    echo "ERROR: Kubeconfig not found at $KUBECONFIG"
-    echo "Have you run terraform/setup.sh yet?"
+# Check if kubeconfig exists
+if [ ! -f ~/.kube/microk8s-config ]; then
+    echo "ERROR: MicroK8s not found. Have you run terraform/setup.sh yet?"
     exit 1
 fi
 
-echo "KUBECONFIG set to: $KUBECONFIG"
+export KUBECONFIG=~/.kube/microk8s-config
+
+echo "✓ KUBECONFIG set to: $KUBECONFIG"
 echo ""
 echo "You can now run flux and kubectl commands:"
 echo "  flux get all -A"
 echo "  kubectl get pods -A"
 echo ""
-echo "To make this permanent, add to your ~/.bashrc:"
-echo "  echo 'export KUBECONFIG=~/.kube/microk8s-config' >> ~/.bashrc"
+echo "To make this permanent in your current shell, run:"
+echo "  source ~/.bashrc"

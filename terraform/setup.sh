@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Ensure snap binaries are in PATH
+export PATH=$PATH:/snap/bin
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
@@ -66,6 +69,17 @@ export KUBECONFIG=~/.kube/microk8s-config
 
 # Add to shell profile if not already there
 KUBECONFIG_EXPORT='export KUBECONFIG=~/.kube/microk8s-config'
+PATH_EXPORT='export PATH=$PATH:/snap/bin'
+
+# Add PATH for snap binaries if not already there
+if ! grep -q "PATH.*snap/bin" ~/.bashrc 2>/dev/null; then
+    echo "" >> ~/.bashrc
+    echo "# Snap binaries" >> ~/.bashrc
+    echo "$PATH_EXPORT" >> ~/.bashrc
+    echo "Added /snap/bin to PATH in ~/.bashrc"
+fi
+
+# Add KUBECONFIG if not already there
 if ! grep -q "KUBECONFIG=.*microk8s-config" ~/.bashrc 2>/dev/null; then
     echo "" >> ~/.bashrc
     echo "# MicroK8s kubeconfig" >> ~/.bashrc
