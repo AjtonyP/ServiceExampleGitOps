@@ -28,11 +28,17 @@ else
     echo "MicroK8s not installed"
 fi
 
-# Clean up kubeconfig
-if [ -f ~/.kube/microk8s-config ]; then
-    echo "Removing kubeconfig..."
-    rm ~/.kube/microk8s-config
-    echo "Kubeconfig removed"
+# Clean up all kubeconfig and certificates
+echo "Cleaning up Kubernetes configuration and certificates..."
+if [ -d ~/.kube ]; then
+    rm -rf ~/.kube
+    echo "  ✓ Removed ~/.kube directory (including certificates and configs)"
+fi
+
+# Remove MicroK8s data directory to clear certificates
+if [ -d /var/snap/microk8s ]; then
+    echo "  ✓ Removing MicroK8s data directory (including old certificates)..."
+    sudo rm -rf /var/snap/microk8s
 fi
 
 # Clean up Terraform state and files

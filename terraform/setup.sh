@@ -64,6 +64,15 @@ echo "Setup complete!"
 echo "======================================"
 echo ""
 
+# Ensure snap binaries are in PATH for kubeconfig generation
+export PATH=$PATH:/snap/bin
+
+# Regenerate kubeconfig to ensure certificates match the cluster
+echo "Generating fresh kubeconfig with current certificates..."
+mkdir -p ~/.kube
+microk8s config > ~/.kube/microk8s-config
+chmod 600 ~/.kube/microk8s-config
+
 # Set KUBECONFIG for the current session
 export KUBECONFIG=~/.kube/microk8s-config
 
