@@ -1,0 +1,107 @@
+# Application configuration - minimal for local dev
+app:
+  name: serviceexample
+  replicaCount: 1
+  image:
+    repository: ajtonyp/serviceexample
+    pullPolicy: IfNotPresent
+    # tag managed by image automation
+  service:
+    type: NodePort
+    port: 9080
+    nodePort: 30080
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  observability:
+    enabled: true
+    metricsPath: /metrics
+    healthPath: /health
+
+# MongoDB - reduced for local dev
+mongodb:
+  enabled: true
+  name: mongodb
+  replicaSet: rs0
+  replicas: 1  # Single replica for local dev
+  image:
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+  service:
+    port: 27017
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    size: 1Gi  # Reduced from 2Gi
+  resources:
+    requests:
+      memory: "128Mi"  # Reduced
+      cpu: "100m"      # Reduced
+    limits:
+      memory: "256Mi"  # Reduced
+      cpu: "250m"      # Reduced
+  observability:
+    enabled: true
+    port: 27017
+
+# Redis - minimal
+redis:
+  enabled: true
+  name: redis
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClass: longhorn
+    size: 500Mi  # Reduced from 1Gi
+  resources:
+    requests:
+      memory: "64Mi"   # Reduced
+      cpu: "50m"       # Reduced
+    limits:
+      memory: "128Mi"  # Reduced
+      cpu: "100m"      # Reduced
+  observability:
+    enabled: true
+    exporterPort: 9121
+
+# NATS - minimal
+nats:
+  enabled: true
+  name: nats
+  image:
+    repository: nats
+    tag: "2.10-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 4222
+    monitoringPort: 8222
+  resources:
+    requests:
+      memory: "32Mi"   # Reduced
+      cpu: "25m"       # Reduced
+    limits:
+      memory: "64Mi"   # Reduced
+      cpu: "50m"       # Reduced
+  observability:
+    enabled: true
+    metricsPath: /metrics
+
+# Grafana dashboards
+grafana:
+  enabled: true
+  dashboards:
+    enabled: true
+
+# Global settings
+global:
+  storageClass: longhorn

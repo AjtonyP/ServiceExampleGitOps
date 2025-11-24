@@ -11,3 +11,9 @@ spec:
     name: serviceexample-gitops
   path: ./flux/sources
   prune: true
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - helmrepositories.yaml
+  - gitrepository.yaml

@@ -1,0 +1,49 @@
+# Minimal resource settings for local development
+defaultSettings:
+  defaultReplicaCount: 1
+  guaranteedInstanceManagerCPU: 1
+  createDefaultDiskLabeledNodes: true
+  defaultDataPath: /var/lib/longhorn
+  priorityClass: longhorn-critical
+
+persistence:
+  defaultClass: true
+  defaultClassReplicaCount: 1
+  reclaimPolicy: Delete
+
+# Minimal resources for 4GB RAM VM
+longhornManager:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+longhornDriver:
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+  kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
+
+longhornUI:
+  replicas: 0
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+# Disable CSI snapshotter for minimal setup
+csi:
+  attacherReplicaCount: 1
+  provisionerReplicaCount: 1
+  resizerReplicaCount: 1
+  snapshotterReplicaCount: 0

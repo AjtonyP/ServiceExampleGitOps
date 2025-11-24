@@ -4,3 +4,13 @@ kind: Kustomization
 resources:
   - prometheus-stack.yaml
   - loki-stack.yaml
+configMapGenerator:
+  - name: prometheus-stack-values
+    files:
+      - values.yaml=prometheus-stack-values.yaml
+  - name: loki-values
+    files:
+      - values.yaml=loki-values.yaml
+  - name: promtail-values
+    files:
+      - values.yaml=promtail-values.yaml

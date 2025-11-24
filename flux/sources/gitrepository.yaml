@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: serviceexample-gitops
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: ssh://git@github.com/AjtonyP/ServiceExampleGitOps.git
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system
