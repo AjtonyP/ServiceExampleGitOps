@@ -6,8 +6,6 @@ defaultSettings:
   defaultDataPath: /var/snap/microk8s/common/var/lib/longhorn
   priorityClass: longhorn-critical
 
-kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
-
 persistence:
   defaultClass: true
   defaultClassReplicaCount: 1
@@ -44,6 +42,7 @@ longhornUI:
 
 # Disable CSI snapshotter for minimal setup
 csi:
+  kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
   attacherReplicaCount: 1
   provisionerReplicaCount: 1
   resizerReplicaCount: 1
