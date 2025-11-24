@@ -22,12 +22,12 @@ app:
     metricsPath: /metrics
     healthPath: /health
 
-# MongoDB - reduced for local dev
+# MongoDB - 3 replicas for proper replica set operation
 mongodb:
   enabled: true
   name: mongodb
   replicaSet: rs0
-  replicas: 1  # Single replica for local dev
+  replicas: 3  # Minimum for automatic failover
   image:
     repository: mongo
     tag: "7.0"
@@ -37,14 +37,14 @@ mongodb:
   persistence:
     enabled: true
     storageClass: longhorn
-    size: 1Gi  # Reduced from 2Gi
+    size: 1Gi
   resources:
     requests:
-      memory: "128Mi"  # Reduced
-      cpu: "100m"      # Reduced
+      memory: "128Mi"
+      cpu: "100m"
     limits:
-      memory: "256Mi"  # Reduced
-      cpu: "250m"      # Reduced
+      memory: "256Mi"
+      cpu: "250m"
   observability:
     enabled: true
     port: 27017
