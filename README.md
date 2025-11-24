@@ -126,74 +126,15 @@ ServiceExampleGitOps/
 
 FluxCD is configured to:
 
-1. **Monitor Helm Repository** (every 5 minutes)
+1. **Monitor Git Repository** (every minute)
+   - Checks <https://github.com/AjtonyP/ServiceExampleGitOps.git>
+   - Automatically applies changes
+
+2. **Monitor Helm Repository** (every 5 minutes)
    - Checks <https://ajtonyp.github.io/ServiceExampleHelm>
    - Detects new chart versions matching `>=0.2.0`
    - Automatically applies new Helm chart versions
    - Updates are triggered only when a new Helm chart is published
-
-**Note**: Docker image updates are managed through the Helm chart version. When you publish a new Helm chart with an updated image tag, FluxCD will deploy it automatically.
-
-### Manual Sync
-
-Force FluxCD to reconcile:
-
-```bash
-# Sync specific HelmRelease
-flux reconcile helmrelease serviceexample -n flux-system
-
-# Sync all
-flux reconcile source git serviceexample-gitops
-flux reconcile kustomization -n flux-system --all
-```
-
-## Resource Configuration
-
-All components are configured with minimal resources for local development:
-
-| Component | CPU Request | Memory Request | Storage |
-|-----------|-------------|----------------|---------|
-| ServiceExample | 50m | 128Mi | - |
-| MongoDB | 100m | 128Mi | 1Gi |
-| Redis | 50m | 64Mi | 500Mi |
-| NATS | 25m | 32Mi | - |
-| Prometheus | 100m | 512Mi | 5Gi |
-| Grafana | 50m | 128Mi | 1Gi |
-| Loki | 100m | 256Mi | 5Gi |
-| Longhorn | 50m | 128Mi | - |
-
-**Total**: ~625m CPU, ~1.5Gi RAM
-
-## Troubleshooting
-
-### Check Flux Status
-
-```bash
-# Overall status
-flux get all -A
-
-# Check sources
-flux get sources all -A
-
-# Check HelmReleases
-flux get helmreleases -A
-
-# View logs
-kubectl logs -n flux-system -l app=helm-controller -f
-```
-
-### Check Application Logs
-
-```bash
-# ServiceExample app
-kubectl logs -f deployment/serviceexample
-
-# MongoDB
-kubectl logs -f statefulset/mongodb-0
-
-# Prometheus
-kubectl logs -n monitoring -f statefulset/prometheus-kube-prometheus-stack-prometheus
-```
 
 ## Cleanup
 
