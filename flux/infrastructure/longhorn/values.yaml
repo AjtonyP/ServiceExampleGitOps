@@ -3,7 +3,7 @@ defaultSettings:
   defaultReplicaCount: 1
   guaranteedInstanceManagerCPU: 1
   createDefaultDiskLabeledNodes: true
-  defaultDataPath: /var/lib/longhorn
+  defaultDataPath: /var/snap/microk8s/common/var/lib/longhorn
   priorityClass: longhorn-critical
 
 persistence:

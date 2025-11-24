@@ -154,27 +154,33 @@ resource "null_resource" "apply_gitops_config" {
       echo "Verifying Flux CRDs..."
       sudo microk8s kubectl get crd gitrepositories.source.toolkit.fluxcd.io
       sudo microk8s kubectl get crd helmrepositories.source.toolkit.fluxcd.io
+      sudo microk8s kubectl get crd kustomizations.kustomize.toolkit.fluxcd.io
       
-      # Apply GitRepository and HelmRepository sources
-      echo "Applying sources..."
-      sudo microk8s kubectl apply -f ${path.module}/../flux/sources/
+      # Apply sources (GitRepository and HelmRepositories)
+      echo "Applying Flux sources..."
+      sudo microk8s kubectl apply -k ${path.module}/../flux/sources/
       
-      # Wait for sources to sync
-      echo "Waiting for sources to sync..."
-      sleep 15
+      # Wait for GitRepository to be ready
+      echo "Waiting for GitRepository to sync..."
+      sleep 10
+      sudo microk8s kubectl wait --for=condition=ready gitrepository/serviceexample-gitops -n flux-system --timeout=120s || true
       
-      # Apply infrastructure configs (Longhorn, monitoring) using kustomize
-      echo "Applying infrastructure..."
-      sudo microk8s kubectl apply -k ${path.module}/../flux/infrastructure/
+      # Wait for HelmRepositories to be ready
+      echo "Waiting for HelmRepositories to sync..."
+      sudo microk8s kubectl wait --for=condition=ready helmrepository/longhorn -n flux-system --timeout=120s || true
+      sudo microk8s kubectl wait --for=condition=ready helmrepository/prometheus-community -n flux-system --timeout=120s || true
+      sudo microk8s kubectl wait --for=condition=ready helmrepository/grafana -n flux-system --timeout=120s || true
+      sudo microk8s kubectl wait --for=condition=ready helmrepository/serviceexample -n flux-system --timeout=120s || true
       
-      # Wait a bit
+      # Apply Flux Kustomizations (this tells Flux what to deploy)
+      echo "Applying Flux Kustomizations..."
+      sudo microk8s kubectl apply -f ${path.module}/../flux/flux-kustomizations.yaml
+      
+      # Wait for Kustomizations to be created
       sleep 5
       
-      # Apply application configs using kustomize
-      echo "Applying applications..."
-      sudo microk8s kubectl apply -k ${path.module}/../flux/apps/
-      
-      echo "GitOps configuration applied"
+      echo "GitOps configuration applied. Flux will now reconcile all resources."
+      echo "Monitor progress with: flux get all -A"
     EOT
   }
 }
