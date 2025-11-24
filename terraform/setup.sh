@@ -60,13 +60,28 @@ echo "======================================"
 echo "Setup complete!"
 echo "======================================"
 echo ""
+
+# Set KUBECONFIG for the current session
+export KUBECONFIG=~/.kube/microk8s-config
+
+# Add to shell profile if not already there
+KUBECONFIG_EXPORT='export KUBECONFIG=~/.kube/microk8s-config'
+if ! grep -q "KUBECONFIG=.*microk8s-config" ~/.bashrc 2>/dev/null; then
+    echo "" >> ~/.bashrc
+    echo "# MicroK8s kubeconfig" >> ~/.bashrc
+    echo "$KUBECONFIG_EXPORT" >> ~/.bashrc
+    echo "Added KUBECONFIG to ~/.bashrc"
+fi
+
+echo "KUBECONFIG has been set to: $KUBECONFIG"
+echo ""
 echo "Next steps:"
 echo ""
-echo "1. Set your kubeconfig:"
-echo "   export KUBECONFIG=~/.kube/microk8s-config"
+echo "1. Source your profile or start a new shell:"
+echo "   source ~/.bashrc"
 echo ""
 echo "2. Wait for all pods to be ready (this may take 5-10 minutes):"
-echo "   watch microk8s kubectl get pods -A"
+echo "   watch kubectl get pods -A"
 echo ""
 echo "3. Check Flux status:"
 echo "   flux get all -A"
@@ -78,5 +93,7 @@ echo "     (admin/prom-operator)"
 echo "   - Longhorn UI: kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80"
 echo ""
 echo "5. View logs:"
-echo "   microk8s kubectl logs -f -n flux-system -l app=source-controller"
+echo "   kubectl logs -f -n flux-system -l app=source-controller"
+echo ""
+echo "NOTE: Run 'source ~/.bashrc' in your current shell to apply KUBECONFIG setting"
 echo ""

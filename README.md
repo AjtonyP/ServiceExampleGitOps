@@ -30,6 +30,7 @@ This setup provides a complete local Kubernetes development environment with:
 ### 1. Run Setup
 
 ```bash
+cd terraform
 ./setup.sh
 ```
 
@@ -40,14 +41,30 @@ This script will:
 3. Install FluxCD
 4. Bootstrap GitOps configuration
 5. Deploy all infrastructure and applications
+6. **Automatically configure KUBECONFIG** in your `~/.bashrc`
 
-### 2. Wait for Deployment
+### 2. Configure Your Shell
+
+After running `setup.sh`, apply the KUBECONFIG setting:
+
+```bash
+# Option 1: Source your profile (for current shell)
+source ~/.bashrc
+
+# Option 2: Use the helper script
+source ../set-kubeconfig.sh
+
+# Option 3: Manually export (temporary)
+export KUBECONFIG=~/.kube/microk8s-config
+```
+
+**Note**: The setup script automatically adds `export KUBECONFIG=~/.kube/microk8s-config` to your `~/.bashrc`, so new shells will have it set automatically.
+
+### 3. Wait for Deployment
 
 The initial deployment takes 5-10 minutes. Monitor progress:
 
 ```bash
-export KUBECONFIG=~/.kube/microk8s-config
-
 # Watch all pods
 watch kubectl get pods -A
 
