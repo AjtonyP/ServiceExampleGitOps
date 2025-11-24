@@ -35,6 +35,10 @@ spec:
       guaranteedInstanceManagerCPU: 5
       createDefaultDiskLabeledNodes: true
       defaultDataPath: /var/lib/longhorn
+      # Optionally set priority class explicitly (already applied by chart defaults)
+      priorityClass: longhorn-critical
+      # If you prefer automatic disk creation on all nodes without labeling, set createDefaultDiskLabeledNodes: false
+      # and remove the node label. Keeping it true requires node label: longhorn.io/create-default-disk=true
       
     persistence:
       defaultClass: true
@@ -59,6 +63,7 @@ spec:
         limits:
           cpu: 200m
           memory: 128Mi
+      kubeletRootDir: /var/snap/microk8s/common/var/lib/kubelet
     
     longhornUI:
       resources:
