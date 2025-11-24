@@ -41,7 +41,7 @@ This script will:
 3. Install FluxCD
 4. Bootstrap GitOps configuration
 5. Deploy all infrastructure and applications
-6. **Automatically configure KUBECONFIG** in your `~/.bashrc`
+6. Automatically configure KUBECONFIG in your `~/.bashrc`
 
 ### 2. Configure Your Shell
 
@@ -115,23 +115,23 @@ kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
 
 ```
 ServiceExampleGitOps/
-├── terraform/              # Terraform configuration
-│   ├── main.tf            # Main Terraform config
-│   ├── variables.tf       # Terraform variables
-│   ├── outputs.tf         # Terraform outputs
-│   ├── setup.sh          # Setup script
-│   └── destroy.sh        # Cleanup script
+├── terraform/               # Terraform configuration
+│   ├── main.tf              # Main Terraform config
+│   ├── variables.tf         # Terraform variables
+│   ├── outputs.tf           # Terraform outputs
+│   ├── setup.sh             # Setup script
+│   └── destroy.sh           # Cleanup script
 │
-├── flux/                  # FluxCD GitOps configuration
-│   ├── sources/          # Git and Helm sources
+├── flux/                    # FluxCD GitOps configuration
+│   ├── sources/             # Git and Helm sources
 │   │   ├── gitrepository.yaml
 │   │   └── helmrepositories.yaml
 │   │
-│   ├── infrastructure/   # Infrastructure components
-│   │   ├── longhorn/    # Storage
-│   │   └── monitoring/  # Prometheus, Grafana, Loki
+│   ├── infrastructure/      # Infrastructure components
+│   │   ├── longhorn/        # Storage
+│   │   └── monitoring/      # Prometheus, Grafana, Loki
 │   │
-│   └── apps/            # Applications
+│   └── apps/                # Applications
 │       └── serviceexample/  # ServiceExample app
 │
 └── README.md
@@ -167,7 +167,7 @@ This will:
 - Remove all Kubernetes resources
 - Uninstall MicroK8s
 - Delete kubeconfig
-- Clean Terraform state``
+- Clean Terraform state
 
 ## Monitoring & Observability
 
@@ -178,13 +178,6 @@ Grafana includes:
 - **ServiceExample Dashboard**: Application metrics
 - **Kubernetes Dashboards**: Cluster health
 - **Loki Logs**: Centralized logging
-
-### Accessing Metrics
-
-ServiceExample exposes metrics at:
-
-- `http://serviceexample:9080/metrics` (Prometheus format)
-- `http://serviceexample:9080/health` (Health checks)
 
 ### View Logs in Grafana
 

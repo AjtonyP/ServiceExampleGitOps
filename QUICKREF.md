@@ -5,7 +5,6 @@
 ```bash
 cd ~/work/ServiceExampleGitOps/terraform
 ./setup.sh
-export KUBECONFIG=~/.kube/microk8s-config
 ```
 
 ## Essential Commands
@@ -47,8 +46,6 @@ kubectl logs -f deployment/serviceexample
 kubectl rollout restart deployment/serviceexample
 
 # Test endpoints
-curl http://localhost:30080/health
-curl http://localhost:30080/metrics
 curl http://localhost:30080/api/person
 ```
 
@@ -80,16 +77,16 @@ kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
 
 ```bash
 # Quick status
-~/ServiceExampleGitOps/scripts/helper.sh status
+./ServiceExampleGitOps/scripts/helper.sh status
 
 # Show all services
-~/ServiceExampleGitOps/scripts/helper.sh services
+./ServiceExampleGitOps/scripts/helper.sh services
 
 # View logs
-~/ServiceExampleGitOps/scripts/helper.sh logs serviceexample
+./ServiceExampleGitOps/scripts/helper.sh logs serviceexample
 
 # Port forward
-~/ServiceExampleGitOps/scripts/helper.sh port-forward grafana
+./ServiceExampleGitOps/scripts/helper.sh port-forward grafana
 
 ```
 
@@ -174,19 +171,3 @@ flux get images all -A
 cd ~/work/ServiceExampleGitOps/terraform
 ./destroy.sh
 ```
-
-## Resource Limits
-
-Current configuration (minimal for local dev):
-
-| Component | CPU | Memory | Storage |
-|-----------|-----|--------|---------|
-| ServiceExample | 50m-200m | 128Mi-256Mi | - |
-| MongoDB | 100m-250m | 128Mi-256Mi | 1Gi |
-| Redis | 50m-100m | 64Mi-128Mi | 500Mi |
-| NATS | 25m-50m | 32Mi-64Mi | - |
-| Prometheus | 100m-500m | 512Mi-1Gi | 5Gi |
-| Grafana | 50m-200m | 128Mi-256Mi | 1Gi |
-| Loki | 100m-500m | 256Mi-512Mi | 5Gi |
-
-**Total**: ~625m CPU, ~1.5Gi RAM, ~13.5Gi Storage
